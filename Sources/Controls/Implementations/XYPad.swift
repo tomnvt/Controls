@@ -10,6 +10,8 @@ public struct XYPad: View {
     var cornerRadius: CGFloat = 0
     var indicatorPadding: CGFloat = 0.2
     var indicatorSize: CGSize = CGSize(width: 40, height: 40)
+    var onStarted: () -> Void = {}
+    var onEnded: () -> Void = {}
 
     /// Initiate the control with two parameters
     /// - Parameters:
@@ -26,7 +28,9 @@ public struct XYPad: View {
             TwoParameterControl(value1: $x, value2: $y,
                                 geometry: .rectilinear,
                                 padding: CGSize(width: indicatorSize.width / 2,
-                                                height: indicatorSize.height / 2)
+                                                height: indicatorSize.height / 2),
+                                onStarted: onStarted,
+                                onEnded: onEnded
             ) { geo in
                 Canvas { cx, size in
                     let viewport = CGRect(origin: .zero, size: size)
@@ -78,6 +82,22 @@ extension XYPad {
     public func indicatorSize(_ indicatorSize: CGSize) -> XYPad {
         var copy = self
         copy.indicatorSize = indicatorSize
+        return copy
+    }
+
+    /// Modifier to change the onStarted closure
+    /// - Parameter onStarted:function that will be called when the touch begins
+    public func onStarted(_ onStarted: @escaping () -> Void) -> XYPad {
+        var copy = self
+        copy.onStarted = onStarted
+        return copy
+    }
+
+    /// Modifier to change the onEnded closure
+    /// - Parameter onEnded function that will be called when the touch ends
+    public func onEnded(_ onEnded: @escaping () -> Void) -> XYPad {
+        var copy = self
+        copy.onEnded = onEnded
         return copy
     }
 }
